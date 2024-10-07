@@ -7,7 +7,6 @@ const FormData = require('form-data');
 
 export const uploadJSONToIPFS = async(JSONBody) => {
     const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
-    //making axios POST request to Pinata ⬇️
     return axios 
         .post(url, JSONBody, {
             headers: {
@@ -22,18 +21,24 @@ export const uploadJSONToIPFS = async(JSONBody) => {
            };
         })
         .catch(function (error) {
-            console.log(error)
+            if (error.response) {
+                console.error('Error Data:', error.response.data);
+                console.error('Error Status:', error.response.status);
+                console.error('Error Headers:', error.response.headers);
+            } else if (error.request) {
+                console.error('Request Data:', error.request);
+            } else {
+                console.error('Error Message:', error.message);
+            }
             return {
                 success: false,
-                message: error.message,
-            }
-
-    });
+                message: error.response ? error.response.data : error.message,
+            };
+        });
 };
 
 export const uploadFileToIPFS = async(file) => {
     const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
-    //making axios POST request to Pinata ⬇️
     
     let data = new FormData();
     data.append('file', file);
@@ -45,8 +50,6 @@ export const uploadFileToIPFS = async(file) => {
         }
     });
     data.append('pinataMetadata', metadata);
-
-    //pinataOptions are optional
     const pinataOptions = JSON.stringify({
         cidVersion: 0,
         customPinPolicy: {
@@ -81,11 +84,18 @@ export const uploadFileToIPFS = async(file) => {
            };
         })
         .catch(function (error) {
-            console.log(error)
+            if (error.response) {
+                console.error('Error Data:', error.response.data);
+                console.error('Error Status:', error.response.status);
+                console.error('Error Headers:', error.response.headers);
+            } else if (error.request) {
+                console.error('Request Data:', error.request);
+            } else {
+                console.error('Error Message:', error.message);
+            }
             return {
                 success: false,
-                message: error.message,
-            }
-
-    });
+                message: error.response ? error.response.data : error.message,
+            };
+        });
 };
